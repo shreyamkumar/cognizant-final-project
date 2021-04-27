@@ -2,17 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { createStore, combineReducers } from "redux";
-import { reducer as formReducer } from "redux-form";
+//import { createStore, combineReducers } from "redux";
+//import { reducer as formReducer } from "redux-form";
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
-const rootReducer = combineReducers({
-  form: formReducer
-});
+// const rootReducer = combineReducers({
+//   form: formReducer
+// });
 
-const store = createStore(rootReducer);
+// const store = createStore(rootReducer);
 
 ReactDOM.render(
   <React.StrictMode>
