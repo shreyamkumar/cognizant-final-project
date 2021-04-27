@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AddLocation from './Components/addLocation';
 import ServicesToLocation from './Components/servicesToLocation';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 function App(props) {
 	const { className } = props;
