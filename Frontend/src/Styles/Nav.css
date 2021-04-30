@@ -1,0 +1,60 @@
+.Nav {
+	background: rgb(255, 255, 255);
+	background: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 1) 0%,
+		rgba(249, 249, 249, 0.8883928571428571) 4%,
+		rgba(249, 249, 249, 1) 6%,
+		rgba(250, 250, 250, 1) 22%
+	);
+	height: 80px;
+	box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 7px;
+	margin: 0;
+}
+
+.nav__content {
+	height: 100%;
+	width: 80%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+h2 {
+	font-size: 54px;
+	font-weight: 700;
+	background: rgb(108, 146, 150);
+	background: linear-gradient(
+		90deg,
+		rgba(108, 146, 150, 1) 0%,
+		rgba(187, 233, 223, 1) 0%,
+		rgba(83, 211, 221, 1) 32%,
+		rgba(62, 138, 156, 0.8883928571428571) 96%
+	);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+button {
+	padding: 7px;
+	width: 150px;
+	border-radius: 7px;
+	margin-left: 10px;
+	font-size: 18px;
+	background-color: #02c3d7;
+	font-weight: 600;
+	outline: none;
+	opacity: 0.8;
+	transition: all 0.3s;
+	color: black;
+}
+button:hover {
+	opacity: 1;
+}
+
+.modal_custom {
+	max-width: 50%;
+	height: 60%;
+}

@@ -16,8 +16,10 @@ app.get('/', function (req, res) {
 });
 
 const add_services = require('./Routes/add_services');
+const add_location = require('./Routes/add_location');
 
 app.use('/add_services', add_services);
+app.use('/add_location', add_location);
 
 app.get('**', (req, res) => {
 	res.send('You dont have access to this route');
