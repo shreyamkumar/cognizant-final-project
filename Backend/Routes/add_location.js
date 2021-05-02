@@ -5,19 +5,27 @@ const mongoose = require('mongoose');
 const Location = require('../Models/add_location');
 
 router.post('/', (req, res) => {
-	const location = new Location({
-		_id: new mongoose.Types.ObjectId(),
-		locationName: req.body.location,
-		locationId: req.body.id,
-		state: req.body.state,
-		country: req.body.country,
-	});
-	location.save().then((result) => {
-		//console.log(result);
-		res.status(201).json({
-			message: 'created successfully',
-			createdService: result,
-		});
+	Location.find({ locationId: req.body.id }).then((doc) => {
+		if (doc.length === 0) {
+			const location = new Location({
+				_id: new mongoose.Types.ObjectId(),
+				locationName: req.body.location,
+				locationId: req.body.id,
+				state: req.body.state,
+				country: req.body.country,
+			});
+			location.save().then((result) => {
+				//console.log(result);
+				res.status(201).json({
+					message: 'created successfully',
+					createdService: result,
+				});
+			});
+		} else {
+			res.json({
+				error: 'There is an existing location with the same pin code',
+			});
+		}
 	});
 });
 

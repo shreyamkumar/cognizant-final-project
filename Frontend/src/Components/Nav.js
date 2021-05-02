@@ -3,16 +3,20 @@ import AddLocation from './AddLocation';
 import ServicesToLocation from './ServicesToLocation';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import '../Styles/Nav.css';
+import AddServices from './AddServices';
 
 function Nav() {
 	const [addLocationModal, setLocationModal] = useState(false);
 	const [mapLocationModal, setMapLocationModal] = useState(false);
+	const [addServices, setAddServices] = useState(false);
 
 	const toggleAddLocation = () => setLocationModal(!addLocationModal);
 	const toggleMAPLocation = () => setMapLocationModal(!mapLocationModal);
-	const submit = (values) => {
-		alert('submitted');
-		console.log(values);
+	const toggleAddServices = () => setAddServices(!addServices);
+	const closeModal = () => {
+		setLocationModal(false);
+		setMapLocationModal(false);
+		setAddServices(false);
 	};
 
 	const renderModal = (isOpen, toggle, headerText, ModalName) => (
@@ -40,7 +44,7 @@ function Nav() {
 						addLocationModal,
 						toggleAddLocation,
 						'Add your Location!',
-						<AddLocation onSubmit={submit} />
+						<AddLocation onClick={closeModal} />
 					)}
 
 					{renderButton(toggleMAPLocation, 'Map Location')}
@@ -48,7 +52,15 @@ function Nav() {
 						mapLocationModal,
 						toggleMAPLocation,
 						'Map your Locations',
-						<ServicesToLocation onSubmit={submit} />
+						<ServicesToLocation onClick={closeModal} />
+					)}
+
+					{renderButton(toggleAddServices, 'Add Services')}
+					{renderModal(
+						addServices,
+						toggleAddServices,
+						'Add your Services',
+						<AddServices onClick={closeModal} />
 					)}
 				</div>
 			</div>

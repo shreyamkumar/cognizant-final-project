@@ -1,74 +1,128 @@
-import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-
-const validate = (values) => {
-	const errors = {};
-	if (!values.locationName) {
-		errors.locationName = 'Please Enter Your Location Name';
-	} else if (values.locationName.length < 5) {
-		errors.locationName = 'Minimum be 5 characters or more';
-	}
-	if (!values.locationId) {
-		errors.locationId = 'Please Enter Your Location Id';
-	} else if (!/^[0-9\b]+$/i.test(values.locationId)) {
-		errors.locationId = 'Invalid ID';
-	}
-	if (!values.states) {
-		errors.states = 'Please Enter Your State Name';
-	} else if (values.states.length < 3) {
-		errors.states = 'Minimum be 3 characters or more';
-	}
-	if (!values.country) {
-		errors.country = 'Please Enter Your Country Name';
-	} else if (values.country.length < 3) {
-		errors.country = 'Minimum be 3 characters or more';
-	}
-	return errors;
-};
-
-const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
-	<div>
-		<label className="control-label">{label}</label>
-		<div>
-			<input {...input} placeholder={label} type={type} className="form-control" />
-			{touched &&
-				((error && <span className="text-danger">{error}</span>) ||
-					(warning && <span>{warning}</span>))}
-		</div>
-	</div>
-);
+import React, { useState } from 'react';
+import axios from '../axios';
 
 let AddLocation = (props) => {
-	const { handleSubmit, pristine, submitting } = props;
+	const closeModal = props.onClick;
+	const [formData, setFormData] = useState({
+		locationName: {
+			name: 'Location Name',
+			value: '',
+			max: 30,
+			min: 5,
+		},
+		locationPin: {
+			name: 'Pin Code',
+			value: '',
+			min: 6,
+			max: 6,
+		},
+		state: {
+			name: 'State',
+			value: '',
+		},
+
+		country: {
+			name: 'Country',
+			value: '',
+		},
+	});
+	const [error, setError] = useState({});
+	const inputFeilds = (type, placeholder, ele) => (
+		<div className="form-group">
+			<label className="control-label" htmlFor={ele}>
+				{placeholder}
+			</label>
+			<input
+				type={type}
+				className="form-control"
+				id={ele}
+				name={ele}
+				placeholder={placeholder}
+				value={formData[ele].value}
+				onChange={(e) => handleInput(e)}
+			/>
+			{error[ele] && <p>{error[ele]}</p>}
+		</div>
+	);
+	const validateFormData = (name, value) => {
+		const validateElement = { ...formData[name] };
+
+		if (value.length >= validateElement.min && value.length <= validateElement.max) {
+			setError({ ...error, [name]: '' });
+		} else {
+			let err = '';
+			if (validateElement.min && validateElement.min === validateElement.max) {
+				err = `${validateElement.name} should of ${validateElement.min} characters`;
+			} else if (validateElement.min) {
+				err = `${validateElement.name} should of ${validateElement.min} and ${validateElement.max}`;
+			}
+			setError({ ...error, [name]: err });
+		}
+	};
+
+	const handleInput = (e) => {
+		if ('locationExist' in error) {
+			console.log('hello');
+		}
+		validateFormData(e.target.name, e.target.value);
+		const updatedFormDataElement = { ...formData[e.target.name] };
+
+		updatedFormDataElement.value = e.target.value;
+
+		setFormData((formData) => ({ ...formData, [e.target.name]: updatedFormDataElement }));
+	};
+
+	const handleReset = (e) => {
+		for (let key in formData) {
+			const resetFormData = { ...formData[key] };
+			resetFormData.value = '';
+			setFormData((formData) => ({ ...formData, [key]: resetFormData }));
+		}
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		console.log(error);
+		await axios
+			.post('/add_location', {
+				location: formData.locationName.value,
+				id: formData.locationPin.value,
+				state: formData.state.value,
+				country: formData.country.value,
+			})
+			.then((res) => {
+				setError((error) => ({ ...error, ['locationExist']: res.data.error }));
+				setError((error) => ({ ...error, ['success']: res.data.message }));
+				if (!res.data.error) {
+					setTimeout(function () {
+						closeModal();
+					}, 1000);
+				}
+				handleReset(e);
+				setTimeout(function () {
+					setError({});
+				}, 1000);
+			});
+	};
 	return (
 		<form onSubmit={handleSubmit} className="container">
+			{error.success && (
+				<div class="alert alert-success" role="alert">
+					Location is successfully added
+				</div>
+			)}
+			{error.locationExist && <p>{error.locationExist}</p>}
+			<div className="form-group">{inputFeilds('text', 'Location Name', 'locationName')}</div>
+			<div className="form-group">{inputFeilds('number', 'Pin Code', 'locationPin')}</div>
+			<div className="form-group">{inputFeilds('text', 'State', 'state')}</div>
+			<div className="form-group">{inputFeilds('text', 'Country', 'country')}</div>
 			<div className="form-group">
-				<Field name="locationName" component={renderField} label="Location Name" />
-			</div>
-			<div className="form-group">
-				<Field name="locationId" component={renderField} label="Location ID" />
-			</div>
-			<div className="form-group">
-				<Field name="states" component={renderField} label="State" />
-			</div>
-			<div className="form-group">
-				<Field name="country" component={renderField} label="Country" />
-			</div>
-			<div className="form-group">
-				<button
-					type="submit"
-					disabled={pristine || submitting}
-					className="btn btn-primary"
-					onSubmit={handleSubmit}>
+				<button type="submit" className="btn btn-primary" onSubmit={handleSubmit}>
 					Add Location
 				</button>
 			</div>
 		</form>
 	);
 };
-AddLocation = reduxForm({
-	form: 'contact',
-	validate,
-})(AddLocation);
 
 export default AddLocation;

@@ -26,22 +26,33 @@ const upload = multer({ storage: storage });
 const Service = require('../Models/add_services');
 
 router.post('/', upload.single('serviceImage'), (req, res, next) => {
+	const file = req.file;
+	Service.find({ serviceTitle: req.body.title }).then((doc) => {
+		if (doc.length === 0) {
+			let index = file.path.lastIndexOf('\\');
+			let imgUrl = file.path.substring(index + 1, file.path.length);
+
+			const service = new Service({
+				_id: new mongoose.Types.ObjectId(),
+				serviceTitle: req.body.title,
+				serviceDesc: req.body.desc,
+				serviceImage: imgUrl,
+			});
+
+			service.save().then((result) => {
+				//console.log(result);
+				res.status(201).json({
+					message: 'created successfully',
+					createdService: result,
+				});
+			});
+		} else {
+			res.json({
+				error: 'Service already exists',
+			});
+		}
+	});
 	//console.log(req.file);
-
-	const service = new Service({
-		_id: new mongoose.Types.ObjectId(),
-		serviceTitle: req.body.title,
-		serviceDesc: req.body.desc,
-		serviceImage: req.file.path,
-	});
-
-	service.save().then((result) => {
-		//console.log(result);
-		res.status(201).json({
-			message: 'created successfully',
-			createdService: result,
-		});
-	});
 });
 
 router.get('/', (req, res, next) => {
@@ -51,6 +62,7 @@ router.get('/', (req, res, next) => {
 			count: docs.length,
 			services: docs.map((doc) => {
 				return {
+					id: doc._id,
 					title: doc.serviceTitle,
 					serviceImgUrl: doc.serviceImage,
 					desc: doc.serviceDesc,
