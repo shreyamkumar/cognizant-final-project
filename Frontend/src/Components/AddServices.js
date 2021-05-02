@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../axios';
 import '../Styles/AddService.css';
 function AddServices(props) {
@@ -12,7 +12,8 @@ function AddServices(props) {
 		},
 		serviceImage: {
 			name: 'Service Thumbnail',
-			value: '',
+			value: null,
+			displayValue: '',
 		},
 		serviceDesc: {
 			name: 'Description',
@@ -24,11 +25,16 @@ function AddServices(props) {
 	const [disable, setDisable] = useState(true);
 	const [error, setError] = useState({});
 	const handleReset = (e) => {
+		setDisable(true);
 		for (let key in formData) {
 			const resetFormData = { ...formData[key] };
-			resetFormData.value = '';
+			if (key === 'serviceImage') {
+				let img = document.getElementById('serviceImage');
+				img.value = null;
+			} else resetFormData.value = '';
 			setFormData((formData) => ({ ...formData, [key]: resetFormData }));
 		}
+		console.log(formData);
 	};
 	const isalphanum = (value) => {
 		var letterNumber = /^[0-9a-zA-Z ]+$/;
@@ -45,12 +51,13 @@ function AddServices(props) {
 				file.type === 'image/jpg' ||
 				file.type === 'image/png'
 			) {
-				setError({ ...error, ['serviceImage']: '' });
+				console.log('hello');
+				setError({ ...error, serviceImage: '' });
 				return 1;
 			} else {
 				setError({
 					...error,
-					['serviceImage']: 'Please upload only jpeg or jpg or png format image',
+					serviceImage: 'Please upload only jpeg or jpg or png format image',
 				});
 				return 0;
 			}
@@ -58,9 +65,11 @@ function AddServices(props) {
 			let value = e.target.value;
 			let name = e.target.name;
 			let err = '';
-
 			if (value.length < validateElement.min || value.length > validateElement.max) {
 				err = `${validateElement.name} should of ${validateElement.min} and ${validateElement.max}`;
+			}
+			if (e.target.name === 'serviceName' && !isalphanum(e.target.value)) {
+				err = `${validateElement.name} should only contain letters and numbers`;
 			}
 			setError({ ...error, [name]: err });
 			return err === '' ? 1 : 0;
@@ -68,32 +77,19 @@ function AddServices(props) {
 	};
 
 	const handleInput = (e) => {
+		let flag = validateFormData(e);
 		const updatedFormDataElement = { ...formData[e.target.name] };
-		if (e.target.name === 'serviceName' && !isalphanum(e.target.value)) {
-			let err = `${updatedFormDataElement.name} should only contain letters and numbers`;
-			setError({ ...error, [e.target.name]: err });
-		} else {
-			setError({ ...error, [e.target.name]: '' });
-		}
+
+		console.log('hello');
 		if (e.target.name === 'serviceImage') {
-			let flag = validateFormData(e);
-			console.log(flag);
-			if (flag === 1) updatedFormDataElement.value = e.target.files[0];
+			if (flag === 1) {
+				updatedFormDataElement.value = e.target.files[0];
+				updatedFormDataElement.displayValue = e.target.files[0].name;
+			}
 		} else {
 			updatedFormDataElement.value = e.target.value;
 		}
 		setFormData((formData) => ({ ...formData, [e.target.name]: updatedFormDataElement }));
-
-		if (Object.keys(error).length === 3) {
-			let flag = validateFormData(e);
-			if (flag === 1) {
-				setDisable(false);
-			} else {
-				setDisable(true);
-			}
-		} else {
-			setDisable(true);
-		}
 	};
 	const inputFeilds = (type, placeholder, ele) => (
 		<div className="form-group">
@@ -107,7 +103,6 @@ function AddServices(props) {
 				name={ele}
 				placeholder={placeholder}
 				value={formData[ele].value}
-				onBlur={(e) => validateFormData(e)}
 				onChange={(e) => handleInput(e)}
 			/>
 			{error[ele] && <p>{error[ele]}</p>}
@@ -121,19 +116,37 @@ function AddServices(props) {
 		postData.append('title', formData.serviceName.value);
 		postData.append('desc', formData.serviceDesc.value);
 		postData.append('serviceImage', formData.serviceImage.value);
-		console.log(formData);
 		await axios.post('/add_services', postData).then((res) => {
-			setError((error) => ({ ...error, ['serviceExist']: res.data.error }));
-			setError((error) => ({ ...error, ['success']: res.data.message }));
-			console.log(res.data);
+			setError((error) => ({ ...error, serviceExist: res.data.error }));
+			setError((error) => ({ ...error, success: res.data.message }));
 			if (!res.data.error) {
 				setTimeout(function () {
 					closeModal();
 				}, 1000);
 			}
+			setTimeout(function () {
+				setError({});
+			}, 1000);
 			handleReset(e);
 		});
 	};
+
+	useEffect(() => {
+		console.log(error);
+		console.log(formData.serviceImage.value);
+		if (Object.keys(error).length >= 3) {
+			if (error.serviceDesc === '' && error.serviceImage === '' && error.serviceName === '') {
+				setDisable(false);
+			} else {
+				setDisable(true);
+			}
+		} else {
+			setDisable(true);
+		}
+		// return () => {
+		// 	cleanup;
+		// };
+	}, [error]);
 	return (
 		<div className="addservices">
 			<form className="addservices__form container" action="" encType="multipart/form-data">
@@ -151,7 +164,7 @@ function AddServices(props) {
 					<input
 						className="form-control"
 						type="file"
-						id="profile"
+						id="serviceImage"
 						name="serviceImage"
 						onChange={(e) => handleInput(e)}
 					/>
@@ -169,7 +182,6 @@ function AddServices(props) {
 						rows="5"
 						placeholder="Description"
 						value={formData.serviceDesc.value}
-						onBlur={(e) => validateFormData(e)}
 						onChange={(e) => handleInput(e)}></textarea>
 
 					{error.serviceDesc && <p>{error.serviceDesc}</p>}

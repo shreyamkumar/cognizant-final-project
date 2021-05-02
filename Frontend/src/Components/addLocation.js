@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../axios';
 
 let AddLocation = (props) => {
@@ -19,13 +19,16 @@ let AddLocation = (props) => {
 		state: {
 			name: 'State',
 			value: '',
+			min: 3,
 		},
 
 		country: {
 			name: 'Country',
 			value: '',
+			min: 3,
 		},
 	});
+	const [disable, setDisable] = useState(true);
 	const [error, setError] = useState({});
 	const inputFeilds = (type, placeholder, ele) => (
 		<div className="form-group">
@@ -44,27 +47,30 @@ let AddLocation = (props) => {
 			{error[ele] && <p>{error[ele]}</p>}
 		</div>
 	);
-	const validateFormData = (name, value) => {
+	const validateFormData = (e) => {
+		const name = e.target.name;
+		const value = e.target.value;
 		const validateElement = { ...formData[name] };
 
 		if (value.length >= validateElement.min && value.length <= validateElement.max) {
 			setError({ ...error, [name]: '' });
+			return 1;
 		} else {
 			let err = '';
 			if (validateElement.min && validateElement.min === validateElement.max) {
 				err = `${validateElement.name} should of ${validateElement.min} characters`;
-			} else if (validateElement.min) {
-				err = `${validateElement.name} should of ${validateElement.min} and ${validateElement.max}`;
+			} else if (validateElement.min && validateElement.max) {
+				err = `${validateElement.name} should between ${validateElement.min} and ${validateElement.max} characters`;
+			} else if (value === '' && validateElement.min) {
+				err = `	${validateElement.name} is required and should be atleast ${validateElement.min} characters long`;
 			}
 			setError({ ...error, [name]: err });
+			return err === '' ? 1 : 0;
 		}
 	};
 
 	const handleInput = (e) => {
-		if ('locationExist' in error) {
-			console.log('hello');
-		}
-		validateFormData(e.target.name, e.target.value);
+		validateFormData(e);
 		const updatedFormDataElement = { ...formData[e.target.name] };
 
 		updatedFormDataElement.value = e.target.value;
@@ -91,8 +97,8 @@ let AddLocation = (props) => {
 				country: formData.country.value,
 			})
 			.then((res) => {
-				setError((error) => ({ ...error, ['locationExist']: res.data.error }));
-				setError((error) => ({ ...error, ['success']: res.data.message }));
+				setError((error) => ({ ...error, locationExist: res.data.error }));
+				setError((error) => ({ ...error, success: res.data.message }));
 				if (!res.data.error) {
 					setTimeout(function () {
 						closeModal();
@@ -104,6 +110,24 @@ let AddLocation = (props) => {
 				}, 1000);
 			});
 	};
+
+	useEffect(() => {
+		if (Object.keys(error).length === 4) {
+			if (
+				error.locationName === '' &&
+				error.locationPin === '' &&
+				error.state === '' &&
+				error.country === ''
+			) {
+				setDisable(false);
+				console.log(disable);
+			} else {
+				setDisable(true);
+			}
+		} else {
+			setDisable(true);
+		}
+	}, [error]);
 	return (
 		<form onSubmit={handleSubmit} className="container">
 			{error.success && (
@@ -117,7 +141,11 @@ let AddLocation = (props) => {
 			<div className="form-group">{inputFeilds('text', 'State', 'state')}</div>
 			<div className="form-group">{inputFeilds('text', 'Country', 'country')}</div>
 			<div className="form-group">
-				<button type="submit" className="btn btn-primary" onSubmit={handleSubmit}>
+				<button
+					type="submit"
+					className="btn btn-primary"
+					disabled={disable}
+					onSubmit={handleSubmit}>
 					Add Location
 				</button>
 			</div>

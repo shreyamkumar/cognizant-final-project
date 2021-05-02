@@ -10,9 +10,10 @@ const ServicesToLocation = (props) => {
 	const [getLocations, setGetLocations] = useState([]);
 	const [getServices, setGetServices] = useState([]);
 	const closeModal = props.onClick;
+	const [disable, setDisable] = useState(true);
 
 	const handleSelect = (e) => {
-		setError((error) => ({ ...error, ['locations']: '' }));
+		setError((error) => ({ ...error, locations: '' }));
 		setLocation(e.target.value);
 	};
 	const handleCheck = (e) => {
@@ -21,12 +22,12 @@ const ServicesToLocation = (props) => {
 		let index = services.indexOf(val);
 
 		if (index === -1) {
-			setError((error) => ({ ...error, ['services']: '' }));
+			setError((error) => ({ ...error, services: '' }));
 			setServices((services) => [...services, val]);
 			setServicesId((servicesId) => [...servicesId, valId]);
 		} else {
 			if (services.length === 1) {
-				setError((error) => ({ ...error, ['services']: 'Please select the services' }));
+				setError((error) => ({ ...error, services: 'Please select the services' }));
 			}
 			let tempServices = [...services];
 			tempServices.splice(index, 1);
@@ -40,11 +41,11 @@ const ServicesToLocation = (props) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (location === '') {
-			setError((error) => ({ ...error, ['locations']: 'Please select the location' }));
+			setError((error) => ({ ...error, locations: 'Please select the location' }));
 		} else {
 		}
 		if (services.length === 0) {
-			setError((error) => ({ ...error, ['services']: 'Please select the services' }));
+			setError((error) => ({ ...error, services: 'Please select the services' }));
 		} else {
 			await axios
 				.post('/map_ServicesToLocation', {
@@ -53,10 +54,10 @@ const ServicesToLocation = (props) => {
 					mapserviceId: servicesId,
 				})
 				.then((res) => {
-					setError((error) => ({ ...error, ['response']: res.data.error }));
+					setError((error) => ({ ...error, response: res.data.error }));
 					console.log(res.data);
 					if (!res.data.error) {
-						setError((error) => ({ ...error, ['success']: res.data.message }));
+						setError((error) => ({ ...error, success: res.data.message }));
 						setTimeout(function () {
 							closeModal();
 						}, 1000);
@@ -90,6 +91,19 @@ const ServicesToLocation = (props) => {
 		});
 		return () => {};
 	}, []);
+
+	useEffect(() => {
+		console.log(error);
+		if (Object.keys(error).length >= 2) {
+			if (error.locations === '' && error.services === '') {
+				setDisable(false);
+			} else {
+				setDisable(true);
+			}
+		} else {
+			setDisable(true);
+		}
+	}, [error]);
 
 	return (
 		<div className="serviceToLocation">
@@ -151,6 +165,7 @@ const ServicesToLocation = (props) => {
 						<div className="col-md-12">
 							<button
 								type="submit"
+								disabled={disable}
 								className="btn btn-primary"
 								onClick={(e) => handleSubmit(e)}>
 								Map Services
