@@ -8,11 +8,7 @@ const MapServices = require('../Models/map_ServicesToLocation');
 
 const unCommonServices = (first, second) => {
 	const res = [];
-	// for (let i = 0; i < first.length; i++) {
-	// 	if (second.indexOf(first[i]) === -1) {
-	// 		res.push(first[i]);
-	// 	}
-	// }
+
 	for (let j = 0; j < second.length; j++) {
 		if (first.indexOf(second[j]) === -1) {
 			res.push(second[j]);
