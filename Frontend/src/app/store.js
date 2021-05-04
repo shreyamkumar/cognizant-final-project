@@ -1,12 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { reducer as formReducer } from 'redux-form';
-
-// const rootReducer = combineReducers({
-//   form: formReducer
-// });
+import currentLocationReducer from '../features/currentlocationSlice';
 
 export const store = configureStore({
 	reducer: {
-		form: formReducer,
+		currentLocation: currentLocationReducer,
 	},
 });

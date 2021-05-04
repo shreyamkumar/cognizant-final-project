@@ -20,21 +20,23 @@ select {
 	margin: 50px 0;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
 }
+
 a {
+	margin-right: 30px;
 	flex: 0 0 24%;
 }
+
 .custom_card {
 	border-radius: 20px !important;
 	border-radius: 7px;
-	height: 200px;
+	height: 170px;
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.37);
 	transition: all 0.2s;
 }
 
 .custom_card:hover {
-	box-shadow: 0 0 8px rgba(0, 0, 0, 0.863);
+	box-shadow: 0 0 8px rgb(0, 0, 0);
 }
 
 img {

@@ -38,6 +38,7 @@ function Nav() {
 				<div className="nav__name">
 					<h2>Dunzo</h2>
 				</div>
+
 				<div className="nav__links">
 					{renderButton(toggleAddLocation, 'Add Location')}
 					{renderModal(
