@@ -150,7 +150,7 @@ const ServicesToLocation = (props) => {
 											onChange={handleCheck}
 										/>
 										<label
-											className="custom-control-label"
+											className="custom-control-label serviceLabel"
 											htmlFor={service.id}>
 											{service.title}
 										</label>
