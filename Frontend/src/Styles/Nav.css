@@ -58,3 +58,15 @@ button:hover {
 	max-width: 50%;
 	height: 60%;
 }
+
+a {
+	text-decoration: none;
+	text-decoration: underline;
+}
+
+a:hover {
+}
+.toregisterstore {
+	color: black;
+	font-size: 18px;
+}

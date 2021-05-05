@@ -113,7 +113,7 @@ const ServicesToLocation = (props) => {
 						Location is successfully added
 					</div>
 				)}
-				{error.response && <p>{error.response}</p>}
+				{error.response && <p className="error">{error.response}</p>}
 				<form>
 					<div className="location">
 						<label htmlFor="location">Select location:</label>
@@ -132,7 +132,7 @@ const ServicesToLocation = (props) => {
 								</option>
 							))}
 						</select>
-						{error.locations && <p>{error.locations}</p>}
+						{error.locations && <p className="error">{error.locations}</p>}
 					</div>
 
 					<div className="mt-2">
@@ -159,7 +159,7 @@ const ServicesToLocation = (props) => {
 							))}
 						</div>
 
-						{error.services && <p>{error.services}</p>}
+						{error.services && <p className="error">{error.services}</p>}
 					</div>
 					<div className="row mt-3">
 						<div className="col-md-12">

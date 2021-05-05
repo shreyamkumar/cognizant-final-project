@@ -22,7 +22,7 @@ select {
 	flex-wrap: wrap;
 }
 
-a {
+.service_link {
 	margin-right: 30px;
 	flex: 0 0 24%;
 }
@@ -52,18 +52,18 @@ img {
 	z-index: 9999;
 }
 
-a {
+.service_link {
 	text-decoration: none;
 	color: black;
 	transition: all 0.2s;
 }
 
-a h5 {
+.service_link h5 {
 	font-size: 20px;
 	transition: all 0.2s;
 }
 
-a:hover {
+.service_link:hover {
 	text-decoration: none;
 	color: linear-gradient(
 		90deg,
@@ -74,6 +74,6 @@ a:hover {
 	);
 }
 
-a:hover h5 {
+.service_link:hover h5 {
 	font-size: 24px;
 }

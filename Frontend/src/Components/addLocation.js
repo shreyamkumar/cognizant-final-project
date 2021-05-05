@@ -47,6 +47,7 @@ let AddLocation = (props) => {
 			{error[ele] && <p>{error[ele]}</p>}
 		</div>
 	);
+
 	const validateFormData = (e) => {
 		const name = e.target.name;
 		const value = e.target.value;

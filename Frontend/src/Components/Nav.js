@@ -4,6 +4,7 @@ import ServicesToLocation from './ServicesToLocation';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import '../Styles/Nav.css';
 import AddServices from './AddServices';
+import { Link } from 'react-router-dom';
 
 function Nav() {
 	const [addLocationModal, setLocationModal] = useState(false);
@@ -40,6 +41,9 @@ function Nav() {
 				</div>
 
 				<div className="nav__links">
+					<Link className="toregisterstore" to="/registerstore">
+						Become our partner
+					</Link>
 					{renderButton(toggleAddLocation, 'Add Location')}
 					{renderModal(
 						addLocationModal,

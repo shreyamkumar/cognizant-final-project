@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, './uploads/serviceImg/');
+		cb(null, './uploads/');
 	},
 	filename: function (req, file, cb) {
 		cb(null, file.originalname);
@@ -41,6 +41,9 @@ router.post('/', upload.single('serviceImage'), (req, res, next) => {
 
 			service.save().then((result) => {
 				//console.log(result);
+				req.session.ServiceId = result._id;
+
+				console.log(req.session.ServiceId);
 				res.status(201).json({
 					message: 'created successfully',
 					createdService: result,
@@ -55,8 +58,33 @@ router.post('/', upload.single('serviceImage'), (req, res, next) => {
 	//console.log(req.file);
 });
 
-router.get('/', (req, res, next) => {
+router.get('/checkSignin', (req, res) => {
+	if (req.session.ServiceId) {
+		return res.json({
+			message: 'signedin',
+		});
+	} else {
+		return res.json({
+			message: 'not signedin',
+		});
+	}
+});
+router.get('/checkSignout', (req, res) => {
+	if (req.session.ServiceId) {
+		req.session.destroy();
+		return res.json({
+			message: 'signedout',
+		});
+	} else {
+		return res.json({
+			message: 'not signedin',
+		});
+	}
+});
+
+router.get('/', (req, res) => {
 	//console.log('hello');
+	//console.log(req.session);
 	Service.find().then((docs) => {
 		const response = {
 			count: docs.length,

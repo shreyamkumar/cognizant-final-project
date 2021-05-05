@@ -1,0 +1,28 @@
+.registerserviceprovider {
+	width: 35%;
+	margin: 50px auto;
+}
+
+.provider_label {
+	font-size: 17px;
+	margin-bottom: 0;
+}
+.provider_heading {
+	font-size: 24px;
+	font-weight: 600;
+	text-align: center;
+	color: #02c3d7;
+}
+
+.provider_form {
+	margin-top: 20px;
+	padding: 0;
+}
+
+.provider_form > div {
+	margin-bottom: 10px;
+}
+
+.provider_button {
+	margin-top: 50px;
+}

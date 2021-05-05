@@ -16,7 +16,7 @@ function AvailServices() {
 	const handleSelect = (e) => {
 		dispatch(setCurrentLocation(e.target.value));
 		setAvailServices([]);
-		setLocation(currentLocation.location);
+		setLocation(e.target.value);
 	};
 
 	useEffect(() => {
@@ -28,9 +28,10 @@ function AvailServices() {
 				},
 			})
 			.then((res) => {
-				console.log(res.data);
 				if (res.data.message) {
 					setMessage(res.data.message);
+				} else {
+					setMessage('');
 				}
 				setAvailServices(res.data.servicesAvailable);
 			});
@@ -38,6 +39,7 @@ function AvailServices() {
 
 	useEffect(() => {
 		setLocation(currentLocation.location);
+		console.log(currentLocation.location);
 		axios.get('/add_location').then((response) => {
 			let count = response.data.count;
 			setGetLocations(response.data.locations);
@@ -76,9 +78,13 @@ function AvailServices() {
 				{message && <h1>We are coming to your location very soon.....</h1>}
 				{availServices &&
 					availServices.map((service) => (
-						<Link to={`/${location}/${service.serviceName}`} key={service.id}>
+						<Link
+							className="service_link"
+							to={`/${location}/${service.serviceName}`}
+							key={service.id}>
 							<div class="custom_card">
 								<img
+									className="service_img"
 									alt={service.serviceName}
 									src={`http://localhost:9000/${service.imgUrl}`}></img>
 								{/* <div className="card_text">

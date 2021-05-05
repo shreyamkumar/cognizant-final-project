@@ -35,7 +35,6 @@ function AddServices(props) {
 			} else resetFormData.value = '';
 			setFormData((formData) => ({ ...formData, [key]: resetFormData }));
 		}
-		console.log(formData);
 	};
 	const isalphanum = (value) => {
 		var letterNumber = /^[0-9a-zA-Z ]+$/;
@@ -52,7 +51,6 @@ function AddServices(props) {
 				file.type === 'image/jpg' ||
 				file.type === 'image/png'
 			) {
-				console.log('hello');
 				setError({ ...error, serviceImage: '' });
 				return 1;
 			} else {
@@ -81,7 +79,6 @@ function AddServices(props) {
 		let flag = validateFormData(e);
 		const updatedFormDataElement = { ...formData[e.target.name] };
 
-		console.log('hello');
 		if (e.target.name === 'serviceImage') {
 			if (flag === 1) {
 				updatedFormDataElement.value = e.target.files[0];
@@ -106,7 +103,7 @@ function AddServices(props) {
 				value={formData[ele].value}
 				onChange={(e) => handleInput(e)}
 			/>
-			{error[ele] && <p>{error[ele]}</p>}
+			{error[ele] && <p className="error">{error[ele]}</p>}
 		</div>
 	);
 
@@ -133,8 +130,6 @@ function AddServices(props) {
 	};
 
 	useEffect(() => {
-		console.log(error);
-		console.log(formData.serviceImage.value);
 		if (Object.keys(error).length >= 3) {
 			if (error.serviceDesc === '' && error.serviceImage === '' && error.serviceName === '') {
 				setDisable(false);
@@ -156,7 +151,7 @@ function AddServices(props) {
 						Service is successfully added
 					</div>
 				)}
-				{error.serviceExist && <p>{error.serviceExist}</p>}
+				{error.serviceExist && <p className="error">{error.serviceExist}</p>}
 				{inputFeilds('text', 'Service Name', 'serviceName')}
 				<div className="form-group">
 					<label className="control-label" htmlFor="profile">
@@ -169,7 +164,7 @@ function AddServices(props) {
 						name="serviceImage"
 						onChange={(e) => handleInput(e)}
 					/>
-					{error.serviceImage && <p>{error.serviceImage}</p>}
+					{error.serviceImage && <p className="error">{error.serviceImage}</p>}
 				</div>
 				<div className="form-group">
 					<label className="control-label" htmlFor="serviceDesc">
@@ -185,7 +180,7 @@ function AddServices(props) {
 						value={formData.serviceDesc.value}
 						onChange={(e) => handleInput(e)}></textarea>
 
-					{error.serviceDesc && <p>{error.serviceDesc}</p>}
+					{error.serviceDesc && <p className="error">{error.serviceDesc}</p>}
 				</div>
 
 				<div className="row mt-3">

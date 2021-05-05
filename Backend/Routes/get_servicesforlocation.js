@@ -6,6 +6,7 @@ const Service = require('../Models/add_services');
 
 router.get('/', (req, res) => {
 	let reqLocation = req.query.location;
+
 	Location.find({ serviceLocation: reqLocation }).then((doc) => {
 		if (doc.length >= 1) {
 			const serviceArray = doc[0].availServices;
