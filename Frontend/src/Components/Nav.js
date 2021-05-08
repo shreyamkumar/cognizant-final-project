@@ -32,7 +32,7 @@ function Nav() {
 	);
 
 	const renderButton = (toggle, buttonText) => (
-		<button color="danger" onClick={toggle}>
+		<button className="nav-button" color="danger" onClick={toggle}>
 			{buttonText}
 		</button>
 	);
@@ -45,11 +45,13 @@ function Nav() {
 		<div className="Nav">
 			<div className="nav__content">
 				<div className="nav__name">
-					<h2>Dunzo</h2>
+					<Link className="dunzo" to="/">
+						<h2>Dunzo</h2>
+					</Link>
 				</div>
 
 				<div className="nav__links">
-					{typeofuser !== 'admin' && typeofuser !== 'custoemr' && (
+					{typeofuser !== 'admin' && typeofuser !== 'customer' && (
 						<Link className="toregisterstore" to="/registerstore">
 							Become our partner
 						</Link>
@@ -80,16 +82,20 @@ function Nav() {
 					)}
 
 					{typeofuser === null && (
-						<Link className="" to="/signup">
+						<Link className="signup" to="/signup">
 							Become a Customer
 						</Link>
 					)}
 					{typeofuser === null && (
-						<Link className="" to="/signin">
+						<Link className="signin" to="/signin">
 							Sign in
 						</Link>
 					)}
-					{typeofuser !== null && <button onClick={(e) => logout(e)}>Logout</button>}
+					{typeofuser !== null && (
+						<button className="nav-button" onClick={(e) => logout(e)}>
+							Logout
+						</button>
+					)}
 				</div>
 			</div>
 		</div>

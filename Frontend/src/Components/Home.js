@@ -9,12 +9,35 @@ import { useDispatch } from 'react-redux';
 import Signin from './Signin';
 import UserSignup from './UserSignup';
 import UserSignin from './UserSignin';
+import axios from '../axios';
+import { setUser } from '../features/userSlice';
+import realAxios from 'axios';
 
 function Home() {
 	const [type, setType] = useState('');
 	const [id, setId] = useState('');
 	const dispatch = useDispatch();
-
+	useEffect(() => {
+		const source = realAxios.CancelToken.source();
+		const token = localStorage.getItem('token');
+		if (token) {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			axios
+				.get('/users/issignedin', config)
+				.then((res) => {
+					dispatch(setUser(res.data.user));
+				})
+				.catch((err) => {
+					if (err.response.status === 401) {
+					}
+				});
+		}
+		return () => {
+			source.cancel();
+		};
+	}, []);
 	return (
 		<div className="home">
 			<Router>

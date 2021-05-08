@@ -21,6 +21,9 @@
 	justify-content: space-between;
 	align-items: center;
 }
+.dunzo:hover {
+	text-decoration: none;
+}
 
 h2 {
 	font-size: 54px;
@@ -37,19 +40,20 @@ h2 {
 	-webkit-text-fill-color: transparent;
 }
 
-button {
+.nav-button {
 	padding: 7px;
 	width: 150px;
 	border-radius: 7px;
 	margin-left: 10px;
 	font-size: 18px;
-	background-color: #02c3d7;
-	font-weight: 600;
+	background: #02c3d7;
+	font-weight: 400;
 	outline: none;
 	opacity: 0.8;
 	transition: all 0.3s;
 	color: black;
 }
+
 button:hover {
 	opacity: 1;
 }
@@ -59,14 +63,28 @@ button:hover {
 	height: 60%;
 }
 
-a {
-	text-decoration: none;
-	text-decoration: underline;
-}
-
-a:hover {
-}
 .toregisterstore {
 	color: black;
-	font-size: 18px;
+	text-decoration: underline;
+	font-size: 20px;
+}
+
+.toregisterstore:hover {
+	color: rgb(0, 210, 144);
+}
+
+.signup,
+.signin {
+	margin-right: 10px;
+	margin-left: 10px;
+	background-color: rgb(0, 210, 144);
+	padding: 10px;
+	text-decoration: none !important;
+	color: white;
+	border-radius: 30px;
+}
+.signup:hover,
+.signin:hover {
+	text-decoration: none;
+	color: white;
 }

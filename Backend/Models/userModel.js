@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
 		minlength: 8,
 		select: false,
 	},
-	passwordConfirm: {
+	confirmPassword: {
 		type: String,
 		select: false,
 	},
@@ -31,10 +31,8 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	role: {
+	typeofuser: {
 		type: String,
-		enum: ['customer', 'admin', 'serviceprovider'],
-		default: 'customer',
 	},
 	passwordResetToken: String,
 	passwordResetExpires: Date,
@@ -43,7 +41,6 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
 	if (!this.isModified('password')) return next();
 	this.password = await bcrypt.hash(this.password, 12);
-	this.passwordConfirm = undefined;
 	next();
 });
 
