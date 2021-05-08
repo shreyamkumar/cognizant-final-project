@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrpyt = require('bcrypt');
-
+const authController = require('./../controllers/authControllerUser');
 //const upload = multer({ dest: './uploads/serviceImg' });
 
 const Store = require('../Models/stores');
@@ -49,21 +49,22 @@ router.post('/auth', (req, res) => {
 	//console.log(req.file);
 });
 
-router.get('/issignedin', (req, res) => {
-	const id = req.query.storeId;
-
-	console.log(req.session);
-
-	if (req.session.serviceProviderid === id) {
-		return res.json({
-			signedin: true,
+router.get('/issignedin', authController.protect, (req, res) => {
+	const { id } = req.query.id;
+	Store.findOne({ id })
+		.select('-password')
+		.then((user) => {
+			if (!user) {
+				return res.json({
+					status: 'fail',
+					error: 'Not signed in as Service Provider',
+				});
+			}
+			res.json({
+				status: 'success',
+				user,
+			});
 		});
-	} else {
-		console.log('here');
-		return res.json({
-			auth: false,
-		});
-	}
 });
 
 router.get('/getserviceprovider', (req, res) => {

@@ -5,32 +5,16 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import ServiceProvider from './ServiceProvider';
 import RegisterServiceProvider from './RegisterServiceProvider';
 import Store from './Store';
-import axios from '../axios';
-import { setUser } from '../features/userSlice';
 import { useDispatch } from 'react-redux';
 import Signin from './Signin';
+import UserSignup from './UserSignup';
+import UserSignin from './UserSignin';
 
 function Home() {
 	const [type, setType] = useState('');
 	const [id, setId] = useState('');
 	const dispatch = useDispatch();
-	// useEffect(() => {
-	// 	axios.get('/user.route').then((res) => {
-	// 		if (res.data.type && res.data.id) {
-	// 			setType(res.data.type);
-	// 			setId(res.data.id);
-	// 		} else {
-	// 			setType('customer');
-	// 		}
-	// 	});
-	// 	return () => {};
-	// }, []);
-	useEffect(() => {
-		axios.get('/getserviceprovider').then((res) => {
-			dispatch(setUser(res.data.serviceprovider));
-		});
-		return () => {};
-	}, [id]);
+
 	return (
 		<div className="home">
 			<Router>
@@ -49,6 +33,12 @@ function Home() {
 				</Route>
 				<Route path={`/storesignin`}>
 					<Signin />
+				</Route>
+				<Route path={`/signup`}>
+					<UserSignup />
+				</Route>
+				<Route path={`/signin`}>
+					<UserSignin />
 				</Route>
 			</Router>
 		</div>

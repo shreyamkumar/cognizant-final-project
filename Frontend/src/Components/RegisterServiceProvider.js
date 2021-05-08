@@ -57,6 +57,8 @@ function RegisterServiceProvider() {
 	const [message, setMessage] = useState('');
 	const [getLocations, setGetLocations] = useState([]);
 	const [getServices, setGetServices] = useState([]);
+	const [token, setToken] = useState('');
+	const [id, setId] = useState('');
 	const inputFeilds = (type, placeholder, ele) => (
 		<div className="form-group">
 			<label className="control-label provider_label" htmlFor={ele}>
@@ -126,7 +128,7 @@ function RegisterServiceProvider() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const postData = new FormData();
-
+		console.log(formData);
 		postData.append('ownerName', formData.ownerName.value);
 		postData.append('email', formData.email.value);
 		postData.append('password', formData.password.value);
@@ -135,17 +137,20 @@ function RegisterServiceProvider() {
 		postData.append('address', formData.address.value);
 		postData.append('location', formData.location.value);
 		postData.append('storeImage', formData.logo.value);
+
 		await axios.post('/register_store', postData).then((res) => {
 			if (!res.data.error) {
-				setError((error) => ({ ...error, success: res.data.message }));
-				setTimeout(function () {
-					setError({});
-				}, 1000);
-				dispatch(setUser(res.data.result));
-				history.push(`/store/${res.data.result.location}/${res.data.result.id}`);
+				setError((error) => ({ ...error, success: res.data.status }));
+				localStorage.setItem('token', res.data.token);
+				setToken(res.data.token);
+				setId(res.data.user.id);
+				dispatch(setUser(res.data.user));
 			} else {
 				setError((error) => ({ ...error, storeExist: res.data.error }));
 			}
+			setTimeout(function () {
+				setError({});
+			}, 1000);
 
 			handleReset(e);
 		});
@@ -158,6 +163,26 @@ function RegisterServiceProvider() {
 		}
 		return 0;
 	};
+	useEffect(() => {
+		const source = realaxios.CancelToken.source();
+		if (localStorage.getItem('token') !== null) {
+			const config = {
+				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+			};
+			axios.get('/auth_store/issignedin', config).then((res) => {
+				if (res.data.status === 'failed') {
+					console.log('therer');
+				} else {
+					dispatch(setUser(res.data.user));
+					history.push(`/store/${res.data.user.location}/${res.data.user._id}`);
+				}
+			});
+		}
+		return () => {
+			source.cancel();
+		};
+	}, [token]);
+
 	useEffect(() => {
 		const source = realaxios.CancelToken.source();
 		axios
@@ -220,12 +245,12 @@ function RegisterServiceProvider() {
 	return (
 		<div className="registerserviceprovider">
 			{error.success && (
-				<div class="alert alert-success" role="alert">
+				<div className="alert alert-success" role="alert">
 					Your store is successfully registered
 				</div>
 			)}
 			{error.storeExist && (
-				<div class="alert alert-danger" role="alert">
+				<div className="alert alert-danger" role="alert">
 					{error.storeExist}
 				</div>
 			)}

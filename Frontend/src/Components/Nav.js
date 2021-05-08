@@ -4,13 +4,16 @@ import ServicesToLocation from './ServicesToLocation';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import '../Styles/Nav.css';
 import AddServices from './AddServices';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, logoutUser } from '../features/userSlice';
 
 function Nav() {
 	const [addLocationModal, setLocationModal] = useState(false);
 	const [mapLocationModal, setMapLocationModal] = useState(false);
 	const [addServices, setAddServices] = useState(false);
-
+	const { typeofuser } = useSelector(selectUser);
+	const history = useHistory();
 	const toggleAddLocation = () => setLocationModal(!addLocationModal);
 	const toggleMAPLocation = () => setMapLocationModal(!mapLocationModal);
 	const toggleAddServices = () => setAddServices(!addServices);
@@ -19,6 +22,7 @@ function Nav() {
 		setMapLocationModal(false);
 		setAddServices(false);
 	};
+	const dispatch = useDispatch();
 
 	const renderModal = (isOpen, toggle, headerText, ModalName) => (
 		<Modal isOpen={isOpen} toggle={toggle} className="modal_custom">
@@ -32,6 +36,10 @@ function Nav() {
 			{buttonText}
 		</button>
 	);
+	const logout = (e) => {
+		dispatch(logoutUser());
+		history.push('/');
+	};
 
 	return (
 		<div className="Nav">
@@ -41,10 +49,13 @@ function Nav() {
 				</div>
 
 				<div className="nav__links">
-					<Link className="toregisterstore" to="/registerstore">
-						Become our partner
-					</Link>
-					{renderButton(toggleAddLocation, 'Add Location')}
+					{typeofuser !== 'admin' && typeofuser !== 'custoemr' && (
+						<Link className="toregisterstore" to="/registerstore">
+							Become our partner
+						</Link>
+					)}
+
+					{typeofuser === 'admin' && renderButton(toggleAddLocation, 'Add Location')}
 					{renderModal(
 						addLocationModal,
 						toggleAddLocation,
@@ -52,7 +63,7 @@ function Nav() {
 						<AddLocation onClick={closeModal} />
 					)}
 
-					{renderButton(toggleMAPLocation, 'Map Location')}
+					{typeofuser === 'admin' && renderButton(toggleMAPLocation, 'Map Location')}
 					{renderModal(
 						mapLocationModal,
 						toggleMAPLocation,
@@ -60,13 +71,25 @@ function Nav() {
 						<ServicesToLocation onClick={closeModal} />
 					)}
 
-					{renderButton(toggleAddServices, 'Add Services')}
+					{typeofuser === 'admin' && renderButton(toggleAddServices, 'Add Services')}
 					{renderModal(
 						addServices,
 						toggleAddServices,
 						'Add your Services',
 						<AddServices onClick={closeModal} />
 					)}
+
+					{typeofuser === null && (
+						<Link className="" to="/signup">
+							Become a Customer
+						</Link>
+					)}
+					{typeofuser === null && (
+						<Link className="" to="/signin">
+							Sign in
+						</Link>
+					)}
+					{typeofuser !== null && <button onClick={(e) => logout(e)}>Logout</button>}
 				</div>
 			</div>
 		</div>

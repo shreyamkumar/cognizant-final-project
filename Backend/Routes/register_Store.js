@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bcrpyt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'my-cts-final-internship-project-secret';
 const multer = require('multer');
 //const upload = multer({ dest: './uploads/serviceImg' });
 const mongoose = require('mongoose');
@@ -44,19 +45,27 @@ router.post('/', upload.single('storeImage'), (req, res, next) => {
 					newStore.password = hash;
 
 					newStore.save().then((store) => {
+						jwt.sign(
+							{ id: store._id },
+							JWT_SECRET,
+							{ expiresIn: '2h' },
+							(err, token) => {
+								if (err) throw err;
+								res.status(201).json({
+									staus: 'success',
+									token,
+									user: {
+										id: store._id,
+										name: store.storeName,
+										location: store.location,
+										storeType: store.storeType,
+										address: store.address,
+										type: 'serviceprovider',
+									},
+								});
+							}
+						);
 						//console.log(result);
-						req.session.serviceProviderid = store._id;
-						res.status(201).json({
-							message: 'created successfully',
-							result: {
-								id: store._id,
-								name: store.storeName,
-								location: store.location,
-								storeType: store.storeType,
-								address: store.address,
-								type: 'serviceprovider',
-							},
-						});
 					});
 				});
 			});

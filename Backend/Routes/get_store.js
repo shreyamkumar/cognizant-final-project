@@ -7,7 +7,7 @@ const Store = require('../Models/stores');
 
 router.get('/', (req, res) => {
 	const { location, storeType } = req.query;
-	console.log(req.query);
+	//console.log(user);
 	Store.find({ location: location, storeType: storeType }).then((docs) => {
 		console.log(docs);
 		if (!docs) return res.status(400).json({ message: 'No store exists' });

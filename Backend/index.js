@@ -1,22 +1,12 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
-var session = require('express-session');
 require('./db');
 app.use(cors());
 //Moddlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('uploads/'));
-
-app.use(
-	session({
-		secret: 'keyboard cat',
-		resave: false,
-		saveUninitialized: true,
-		cookie: { maxAge: 1000 * 60 * 60 * 24 },
-	})
-);
 
 //Routes
 app.get('/', function (req, res) {
@@ -39,8 +29,8 @@ app.use('/register_store', require('./Routes/register_Store.js'));
 app.use('/auth_store', require('./Routes/auth_store.js'));
 app.use('/get_store', require('./Routes/get_store.js'));
 app.use('/user.route', require('./Routes/user.route.js'));
+app.use('/users', userRouter);
 
-app.use('/users',userRouter);
 app.get('**', (req, res) => {
 	res.send('You dont have access to this route');
 });

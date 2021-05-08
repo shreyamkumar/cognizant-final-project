@@ -1,23 +1,32 @@
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router';
 import axios from '../axios';
+import { selectUser, setUser } from '../features/userSlice';
+import realAxios from 'axios';
 
 function Store() {
+	const dispatch = useDispatch();
 	const match = useRouteMatch();
 	const history = useHistory();
 	const { location, storeId } = match.params;
+	const { token } = useSelector(selectUser);
 	useEffect(() => {
-		axios
-			.get('/auth_store/issignedin', {
-				withCredentials: true,
-				params: {
-					storeId,
-				},
-			})
-			.then((res) => {
-				// if (!res.data.auth) history.push('/storesignin');
-				console.log(res.data);
-			});
+		const source = realAxios.CancelToken.source();
+		const config = {
+			headers: { Authorization: `Bearer ${token}` },
+		};
+		axios.get('/auth_store/issignedin', config).then((res) => {
+			if (res.data.status === 'failed') {
+				console.log('therer');
+				history.push('/registerstore');
+			} else {
+				dispatch(setUser(res.data.user));
+			}
+		});
+		return () => {
+			source.cancel();
+		};
 	}, []);
 	return (
 		<div>
