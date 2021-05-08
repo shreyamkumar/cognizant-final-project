@@ -20,6 +20,9 @@ const add_location = require('./Routes/add_location');
 const map_ServicesToLocation = require('./Routes/map_ServicesToLocation');
 const get_servicesforlocation = require('./Routes/get_servicesforlocation');
 const userRouter = require('./Routes/userRoutes');
+const cartRouter = require('./Routes/cartRoutes');
+const orderRouter = require('./Routes/orderRoutes'); 
+
 
 app.use('/add_services', add_services);
 app.use('/add_location', add_location);
@@ -30,6 +33,9 @@ app.use('/auth_store', require('./Routes/auth_store.js'));
 app.use('/get_store', require('./Routes/get_store.js'));
 app.use('/user.route', require('./Routes/user.route.js'));
 app.use('/users', userRouter);
+app.use('/cart',cartRouter);
+app.use('/orders',orderRouter);
+
 
 app.get('**', (req, res) => {
 	res.send('You dont have access to this route');
