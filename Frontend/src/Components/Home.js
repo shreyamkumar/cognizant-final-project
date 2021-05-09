@@ -54,9 +54,9 @@ function Home() {
 				<Route path={`/store/:location/:storeId`}>
 					<Store />
 				</Route>
-				<Route path={`/storesignin`}>
+				{/* <Route path={`/storesignin`}>
 					<Signin />
-				</Route>
+				</Route> */}
 				<Route path={`/signup`}>
 					<UserSignup />
 				</Route>
