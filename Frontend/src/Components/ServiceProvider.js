@@ -10,8 +10,8 @@ function ServiceProvider() {
 	const [message, setMessage] = useState('');
 	const [count, setCount] = useState('');
 	const [serviceProvider, setServiceProvider] = useState([]);
+	console.log(location, serviceName);
 	useEffect(() => {
-		console.log(match);
 		axios
 			.get('/get_store', {
 				params: {
@@ -43,7 +43,7 @@ function ServiceProvider() {
 					serviceProvider.map((service) => (
 						<Link
 							className="store_card_link"
-							to={`${match.url}/${service.id}`}
+							to={`/${location}/${serviceName}/${service.id}`}
 							key={service.id}>
 							<div class="store_card">
 								<img

@@ -7,16 +7,19 @@ import AddServices from './AddServices';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, logoutUser } from '../features/userSlice';
+import AddProducts from './AddProducts';
 
 function Nav() {
 	const [addLocationModal, setLocationModal] = useState(false);
 	const [mapLocationModal, setMapLocationModal] = useState(false);
 	const [addServices, setAddServices] = useState(false);
+	const [addProducts, setAddProducts] = useState(false);
 	const { typeofuser } = useSelector(selectUser);
 	const history = useHistory();
 	const toggleAddLocation = () => setLocationModal(!addLocationModal);
 	const toggleMAPLocation = () => setMapLocationModal(!mapLocationModal);
 	const toggleAddServices = () => setAddServices(!addServices);
+	const toggleAddProducts = () => setAddProducts(!addProducts);
 	const closeModal = () => {
 		setLocationModal(false);
 		setMapLocationModal(false);
@@ -51,12 +54,19 @@ function Nav() {
 				</div>
 
 				<div className="nav__links">
-					{typeofuser !== 'admin' && typeofuser !== 'customer' && (
+					{typeofuser === null && (
 						<Link className="toregisterstore" to="/registerstore">
 							Become our partner
 						</Link>
 					)}
-
+					{typeofuser === 'serviceprovider' &&
+						renderButton(toggleAddProducts, 'Add Products')}
+					{renderModal(
+						addProducts,
+						toggleAddProducts,
+						'Add your Products!',
+						<AddProducts onClick={closeModal} />
+					)}
 					{typeofuser === 'admin' && renderButton(toggleAddLocation, 'Add Location')}
 					{renderModal(
 						addLocationModal,
@@ -92,7 +102,7 @@ function Nav() {
 						</Link>
 					)}
 					{typeofuser !== null && (
-						<button className="nav-button" onClick={(e) => logout(e)}>
+						<button className="signin" onClick={(e) => logout(e)}>
 							Logout
 						</button>
 					)}

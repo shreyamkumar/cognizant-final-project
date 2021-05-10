@@ -1,0 +1,17 @@
+.cart {
+	flex: 1 0 30%;
+	background: rgba(0, 0, 0, 0.089);
+	padding: 20px;
+}
+
+.cart-card {
+	background: white;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+}
+.cart-text > h5,
+.cart-text > p {
+	margin: 0;
+	text-transform: capitalize;
+}

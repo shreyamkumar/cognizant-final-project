@@ -70,7 +70,8 @@ exports.login = async (req, res, next) => {
 	try {
 		const { email, password } = req.body;
 		const store = await Store.findOne({ email });
-		if (store) {
+		if (store !== null) {
+			let user = store;
 			const isMatch = await bcrypt.compare(password, store.password);
 			if (!isMatch) {
 				return res.status(401).json({
@@ -78,15 +79,16 @@ exports.login = async (req, res, next) => {
 				});
 			}
 			const token = signToken(store._id);
-			res.status(200).json({
+			return res.status(200).json({
 				status: 'success',
 				token,
 				user,
+				typeofuser: 'serviceprovider',
 			});
 		} else {
 			const newUser = await User.findOne({ email }).select('+password');
 			const user = await User.findOne({ email }).select('-password');
-			console.log(email);
+
 			if (!newUser || !(await newUser.correctPassword(password, newUser.password))) {
 				return res.status(401).json({
 					message: 'Email or Password is incorrect',
@@ -94,10 +96,11 @@ exports.login = async (req, res, next) => {
 			}
 
 			const token = signToken(user._id);
-			res.status(200).json({
+			return res.status(200).json({
 				status: 'success',
 				token,
 				user,
+				typeofuser: 'customer',
 			});
 		}
 	} catch (err) {
@@ -124,8 +127,9 @@ exports.protect = async (req, res, next) => {
 		try {
 			const decoded = await promisify(jwt.verify)(token, JWT_SECRET);
 			req.query.id = decoded.id;
+			//console.log(req.query);
 		} catch (err) {
-			res.status(401).json({
+			return res.status(401).json({
 				status: 'failed',
 				message: 'Invalid Token Please Login Again',
 			});
@@ -140,21 +144,29 @@ exports.protect = async (req, res, next) => {
 	}
 };
 exports.issignedin = async (req, res) => {
-	const { id } = req.query.id;
-	User.findOne({ id })
-		.select('-password')
-		.then((user) => {
-			if (!user) {
-				return res.json({
-					status: 'fail',
-					error: 'Not signed in',
-				});
-			}
-			res.json({
-				status: 'success',
-				user,
-			});
+	const id = req.query.id;
+	const store = await Store.findOne({ _id: id }).select('-password');
+	const customer = await User.findOne({ _id: id }).select('-password');
+	if (store !== null) {
+		let user = store;
+		return res.json({
+			status: 'success',
+			user,
+			typeofuser: 'serviceprovider',
 		});
+	} else if (customer !== null) {
+		let user = customer;
+		return res.json({
+			status: 'success',
+			user,
+			typeofuser: 'customer',
+		});
+	} else {
+		res.json({
+			status: 'fail',
+			error: 'User does not exist ',
+		});
+	}
 };
 
 exports.forgetPassword = async (req, res, next) => {

@@ -20,6 +20,19 @@ var storeSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	products: {
+		type: Array,
+		default: [
+			{
+				_id: mongoose.Schema.Types.ObjectId,
+				name: String,
+				price: String,
+				desc: String,
+				category: String,
+				prodImg: String,
+			},
+		],
+	},
 	storeType: {
 		type: String,
 		required: true,

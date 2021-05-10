@@ -23,21 +23,28 @@ const UserSignin = (props) => {
 	const history = useHistory();
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
 		axios
 			.post('/users/login', {
 				email: formData.email.value,
 				password: formData.password.value,
 			})
 			.then((res) => {
+				console.log(res.data);
 				if (res.data.status === 'success') {
-					history.push('/');
 					localStorage.setItem('token', res.data.token);
 					dispatch(setUser(res.data.user));
+					if (res.data.typeofuser === 'serviceprovider') {
+						history.push(`store/${res.data.user.location}/${res.data.user._id}`);
+					} else {
+						history.push('/');
+					}
 				}
 			})
 			.catch((err) => {
-				handleReset(e);
+				//handleReset(e);
+				console.log(err.response);
+				// if (err.response.status === 401) {
+				// }
 			});
 	};
 
@@ -66,7 +73,6 @@ const UserSignin = (props) => {
 		validate(e);
 		const updatedFormDataElement = { ...formData[e.target.name] };
 		updatedFormDataElement.value = e.target.value;
-		console.log(updatedFormDataElement);
 		setFormData((formData) => ({
 			...formData,
 			[e.target.name]: updatedFormDataElement,
@@ -85,9 +91,15 @@ const UserSignin = (props) => {
 				.then((res) => {
 					dispatch(setUser(res.data.user));
 					history.push('/');
+					if (res.data.typeofuser === 'serviceprovider') {
+						history.push(`store/${res.data.user.location}/${res.data.user._id}`);
+					} else {
+						history.push('/');
+					}
 				})
 				.catch((err) => {
 					if (err.response.status === 401) {
+						//console.log(err.response)
 					}
 				});
 		}
@@ -120,6 +132,7 @@ const UserSignin = (props) => {
 						className="form-control user-signin-input"
 						name="email"
 						placeholder="Email"
+						value={formData.email.value}
 						onChange={(e) => changeHandler(e)}
 					/>
 					{error.email && <p className="error">{error.email}</p>}
@@ -133,6 +146,7 @@ const UserSignin = (props) => {
 						className="form-control user-signin-input"
 						name="password"
 						placeholder="Password"
+						value={formData.password.value}
 						onChange={(e) => changeHandler(e)}
 					/>
 					{error.password && <p className="error">{error.password}</p>}

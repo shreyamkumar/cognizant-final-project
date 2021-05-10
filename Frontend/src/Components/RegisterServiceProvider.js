@@ -165,12 +165,13 @@ function RegisterServiceProvider() {
 	};
 	useEffect(() => {
 		const source = realaxios.CancelToken.source();
-		if (localStorage.getItem('token') !== null) {
+		const token = localStorage.getItem('token');
+		if (token) {
 			const config = {
-				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+				headers: { Authorization: `Bearer ${token}` },
 			};
 			axios.get('/auth_store/issignedin', config).then((res) => {
-				if (res.data.status === 'failed') {
+				if (res.data.status === 'fail') {
 					console.log('therer');
 				} else {
 					dispatch(setUser(res.data.user));

@@ -20,7 +20,6 @@ function AvailServices() {
 	};
 
 	useEffect(() => {
-		console.log(currentLocation.location);
 		axios
 			.get('/get_servicesforlocation', {
 				params: {
@@ -39,7 +38,6 @@ function AvailServices() {
 
 	useEffect(() => {
 		setLocation(currentLocation.location);
-		console.log(currentLocation.location);
 		axios.get('/add_location').then((response) => {
 			let count = response.data.count;
 			setGetLocations(response.data.locations);

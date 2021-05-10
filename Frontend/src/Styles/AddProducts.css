@@ -1,0 +1,83 @@
+.addproducts-label {
+	font-size: 19px;
+}
+.categories {
+	flex: 0 0 15%;
+	max-height: 100%;
+}
+
+.category-product {
+	flex: 1 0 55%;
+}
+.category-name {
+	font-size: 18px;
+	font-weight: normal;
+	cursor: pointer;
+	padding: 10px;
+	box-sizing: border-box;
+	transition: all 0.3s;
+}
+
+.category-name:hover {
+	border: 1px solid rgba(0, 0, 0, 0.274);
+}
+
+.products-container {
+	width: 60%;
+	margin: 10px auto;
+	display: flex;
+	justify-content: center;
+}
+
+.product-card {
+	background-color: white;
+	justify-content: flex-start;
+	display: flex;
+	padding: 10px;
+	align-items: center;
+	max-height: 150px;
+	margin: 10px;
+	padding: 20px;
+	box-sizing: border-box;
+	border-radius: 10px;
+	transition: all 0.3s;
+}
+
+.product-card:hover {
+	border: 1px solid rgba(0, 0, 0, 0.274);
+}
+.product-img {
+	width: 20%;
+	margin-right: 30px;
+}
+.productcard-text {
+	width: 30%;
+	margin-right: 10px;
+}
+.addtocart {
+	margin-left: 10px;
+	width: 100px;
+	background-color: rgb(42, 210, 0);
+	padding: 7px;
+	text-decoration: none !important;
+	color: white;
+	font-size: 15px;
+	border-radius: 30px;
+}
+
+.incdec-btn {
+	width: 50px;
+	padding: 0px;
+	text-decoration: none !important;
+	color: black;
+	font-size: 20px;
+}
+
+.dec {
+	border-top-left-radius: 30px;
+	border-bottom-left-radius: 30px;
+}
+.inc {
+	border-top-right-radius: 30px;
+	border-bottom-right-radius: 30px;
+}

@@ -14,10 +14,8 @@ router.post('/auth', (req, res) => {
 	}
 	//console.log(req.session.serviceProviderid);
 	const { email, password } = req.body;
-	console.log(email);
 	try {
 		Store.findOne({ email }).then((doc) => {
-			console.log('do');
 			if (!doc) {
 				return res.json({ auth: false, notexist: 'No store exist with this email' });
 			}
@@ -29,7 +27,6 @@ router.post('/auth', (req, res) => {
 						.json({ auth: false, wrongcredentials: 'Invalid Credentials' });
 
 				req.session.serviceProviderid = doc._id;
-				console.log(req.session.serviceProviderid);
 				res.status(200).json({
 					auth: true,
 					message: 'signedin successfully',
@@ -49,22 +46,36 @@ router.post('/auth', (req, res) => {
 	//console.log(req.file);
 });
 
-router.get('/issignedin', authController.protect, (req, res) => {
-	const { id } = req.query.id;
-	Store.findOne({ id })
-		.select('-password')
-		.then((user) => {
-			if (!user) {
-				return res.json({
-					status: 'fail',
-					error: 'Not signed in as Service Provider',
-				});
-			}
-			res.json({
-				status: 'success',
-				user,
-			});
+router.get('/issignedin', authController.protect, async (req, res) => {
+	const id = req.query.id;
+	const store = await Store.findOne({ _id: id }).select('-password');
+	if (store !== null) {
+		let user = store;
+		return res.json({
+			status: 'success',
+			user,
+			typeofuser: 'serviceprovider',
 		});
+	} else {
+		res.json({
+			status: 'fail',
+			error: 'Service Provider does not exist',
+		});
+	}
+	// Store.findOne({ id })
+	// 	.select('-password')
+	// 	.then((user) => {
+	// 		if (!user) {
+	// 			return res.json({
+	// 				status: 'fail',
+	// 				error: 'Not signed in as Service Provider',
+	// 			});
+	// 		}
+	// 		res.json({
+	// 			status: 'success',
+	// 			user,
+	// 		});
+	// 	});
 });
 
 router.get('/getserviceprovider', (req, res) => {

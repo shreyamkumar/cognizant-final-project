@@ -20,6 +20,7 @@ function Home() {
 	useEffect(() => {
 		const source = realAxios.CancelToken.source();
 		const token = localStorage.getItem('token');
+		console.log(token);
 		if (token) {
 			const config = {
 				headers: { Authorization: `Bearer ${token}` },
@@ -30,8 +31,9 @@ function Home() {
 					dispatch(setUser(res.data.user));
 				})
 				.catch((err) => {
-					if (err.response.status === 401) {
-					}
+					console.log(err.response);
+					// if (err.response.status === 401) {
+					// }
 				});
 		}
 		return () => {
@@ -48,12 +50,16 @@ function Home() {
 				<Route exact path={`/:location/:serviceName`}>
 					<ServiceProvider />
 				</Route>
+				<Route exact path={`/:location/:serviceName/:storeId`}>
+					<Store />
+				</Route>
+				<Route path={`/store/:location/:id`}>
+					<Store />
+				</Route>
 				<Route path={`/registerstore`}>
 					<RegisterServiceProvider />
 				</Route>
-				<Route path={`/store/:location/:storeId`}>
-					<Store />
-				</Route>
+
 				{/* <Route path={`/storesignin`}>
 					<Signin />
 				</Route> */}
