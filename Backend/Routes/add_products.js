@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const multer = require('multer');
-//const upload = multer({ dest: './uploads/serviceImg' });
 const mongoose = require('mongoose');
 
 const storage = multer.diskStorage({
@@ -32,16 +31,6 @@ router.post('/', upload.single('productImage'), (req, res, next) => {
 				prodImg: imgUrl,
 			};
 			doc.products = [...doc.products, product];
-			// Product.updateOne(
-			// 	{ _id: req.body.id },
-			// 	{
-			// 		$push: {
-			// 			products: product,
-			// 		},
-			// 	}
-			// );
-			//console.log(product);
-			//console.log(doc);
 			doc.save().then((result) => {
 				res.status(201).json({
 					status: 'success',
@@ -56,33 +45,7 @@ router.post('/', upload.single('productImage'), (req, res, next) => {
 			});
 		}
 	});
-
-	//console.log(req.file);
 });
-
-// router.get('/checkSignin', (req, res) => {
-// 	if (req.session.ServiceId) {
-// 		return res.json({
-// 			message: 'signedin',
-// 		});
-// 	} else {
-// 		return res.json({
-// 			message: 'not signedin',
-// 		});
-// 	}
-// });
-// router.get('/checkSignout', (req, res) => {
-// 	if (req.session.ServiceId) {
-// 		req.session.destroy();
-// 		return res.json({
-// 			message: 'signedout',
-// 		});
-// 	} else {
-// 		return res.json({
-// 			message: 'not signedin',
-// 		});
-// 	}
-// });
 
 router.get('/', (req, res) => {
 	const id = req.query.id;
@@ -107,11 +70,5 @@ router.get('/', (req, res) => {
 			});
 		}
 	});
-
-	// 	res.status(201).json(response);
-	// });
-	// res.json({
-	// 	message: 'hello',
-	// });
 });
 module.exports = router;

@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import axios from '../axios';
 import { selectCurrentLocation, setCurrentLocation } from '../features/currentlocationSlice';
 import '../Styles/AvailServices.css';
+import HomeStatic from './HomeStatic';
+import Mobile from './Mobile';
+import TopPicks from './TopPicks';
 
 function AvailServices() {
 	const dispatch = useDispatch();
@@ -46,15 +49,11 @@ function AvailServices() {
 
 	return (
 		<div className="availServices">
-			{/* <nav aria-label="breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item">
-						<a href="#">{currentLocation.location}</a>
-					</li>
-				</ol>
-			</nav> */}
+			<h2 className="availServics-heading" style={{ fontSize: '30px' }}>
+				Essentials delivered to your doorstep
+			</h2>
 			<div className="location">
-				<label htmlFor="location">Select location:</label>
+				<label htmlFor="location">Location: {currentLocation.location}</label>
 				<select
 					className="form-control"
 					id="location"
@@ -85,14 +84,14 @@ function AvailServices() {
 									className="service_img"
 									alt={service.serviceName}
 									src={`http://localhost:9000/${service.imgUrl}`}></img>
-								{/* <div className="card_text">
-									<h5>{service.serviceName}</h5>
-									<p>{service.serviceDesc}</p>
-								</div> */}
 							</div>
 						</Link>
 					))}
 			</div>
+
+			<TopPicks />
+			<Mobile />
+			<HomeStatic />
 		</div>
 	);
 }

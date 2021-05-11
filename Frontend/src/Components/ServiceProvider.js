@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 import axios from '../axios';
 
 import '../Styles/ServiceProvider.css';
+import HomeStatic from './HomeStatic';
 function ServiceProvider() {
 	const match = useRouteMatch();
 	const { location, serviceName } = match.params;
 	const [message, setMessage] = useState('');
 	const [count, setCount] = useState('');
 	const [serviceProvider, setServiceProvider] = useState([]);
-	console.log(location, serviceName);
 	useEffect(() => {
 		axios
 			.get('/get_store', {
@@ -25,7 +25,6 @@ function ServiceProvider() {
 				} else {
 					setMessage('');
 					setCount(res.data.count);
-					console.log(res.data);
 					setServiceProvider(res.data.storeAvailable);
 				}
 			});
@@ -34,7 +33,7 @@ function ServiceProvider() {
 		<div className="serviceprovider">
 			<div className="heading">
 				<p className="heading_details">
-					<h1 className="store_number">Order your {serviceName}</h1>
+					<h1 className="store_number">{serviceName}</h1>
 					<h3 className="store_number">{count} Stores</h3>
 				</p>
 			</div>
@@ -60,6 +59,7 @@ function ServiceProvider() {
 						</Link>
 					))}
 			</div>
+			<HomeStatic />
 		</div>
 	);
 }

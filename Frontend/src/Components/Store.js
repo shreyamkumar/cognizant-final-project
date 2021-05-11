@@ -27,10 +27,6 @@ function Store() {
 				} else if (res.data.status === 'fail') {
 					history.push('/');
 				}
-				// else {
-				// 	dispatch(setUser(res.data.user));
-				// 	history.push(`/store/${res.data.user.location}/${res.data.user._id}`);
-				// }
 			});
 		}
 		return () => {

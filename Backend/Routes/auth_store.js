@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bcrpyt = require('bcrypt');
 const authController = require('./../controllers/authControllerUser');
-//const upload = multer({ dest: './uploads/serviceImg' });
 
 const Store = require('../Models/stores');
 
@@ -12,7 +11,6 @@ router.post('/auth', (req, res) => {
 			auth: true,
 		});
 	}
-	//console.log(req.session.serviceProviderid);
 	const { email, password } = req.body;
 	try {
 		Store.findOne({ email }).then((doc) => {
@@ -39,11 +37,7 @@ router.post('/auth', (req, res) => {
 				});
 			});
 		});
-	} catch (e) {
-		console.log(e);
-	}
-
-	//console.log(req.file);
+	} catch (e) {}
 });
 
 router.get('/issignedin', authController.protect, async (req, res) => {
@@ -62,20 +56,6 @@ router.get('/issignedin', authController.protect, async (req, res) => {
 			error: 'Service Provider does not exist',
 		});
 	}
-	// Store.findOne({ id })
-	// 	.select('-password')
-	// 	.then((user) => {
-	// 		if (!user) {
-	// 			return res.json({
-	// 				status: 'fail',
-	// 				error: 'Not signed in as Service Provider',
-	// 			});
-	// 		}
-	// 		res.json({
-	// 			status: 'success',
-	// 			user,
-	// 		});
-	// 	});
 });
 
 router.get('/getserviceprovider', (req, res) => {

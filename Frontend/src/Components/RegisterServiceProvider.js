@@ -128,7 +128,6 @@ function RegisterServiceProvider() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const postData = new FormData();
-		console.log(formData);
 		postData.append('ownerName', formData.ownerName.value);
 		postData.append('email', formData.email.value);
 		postData.append('password', formData.password.value);
@@ -172,10 +171,9 @@ function RegisterServiceProvider() {
 			};
 			axios.get('/auth_store/issignedin', config).then((res) => {
 				if (res.data.status === 'fail') {
-					console.log('therer');
 				} else {
 					dispatch(setUser(res.data.user));
-					history.push(`/store/${res.data.user.location}/${res.data.user._id}`);
+					history.push('/');
 				}
 			});
 		}
@@ -215,7 +213,6 @@ function RegisterServiceProvider() {
 					setMessage('');
 				}
 				setGetServices(res.data.servicesAvailable);
-				console.log(res.data.servicesAvailable);
 			});
 
 		return () => {

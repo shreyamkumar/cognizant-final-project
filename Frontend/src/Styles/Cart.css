@@ -15,3 +15,37 @@
 	margin: 0;
 	text-transform: capitalize;
 }
+
+.bill-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.bill-container p {
+	font-size: 18px;
+	margin-right: 20px;
+}
+
+.order-button {
+	text-align: right;
+	margin-right: 0px;
+}
+
+.order-button button {
+	outline: none;
+	width: 100px;
+	border-radius: 30px;
+	padding: 5px;
+	background: rgba(55, 175, 129, 0.742);
+	color: white;
+	transition: all 0.3s;
+}
+
+.order-button button:hover {
+	background: rgba(55, 175, 129, 1);
+}
+
+.bill-wrapper {
+	padding: 10px;
+	background: rgba(0, 255, 128, 0.075);
+}

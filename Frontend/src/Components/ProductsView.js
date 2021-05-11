@@ -14,7 +14,7 @@ function ProductsView({ id }) {
 	const dispatch = useDispatch();
 	const { products } = useSelector(selectProducts);
 	const { user } = useSelector(selectUser);
-	const [orderId, setOrderid] = useState([]);
+	const [orderId, setOrderid] = useState(['something']);
 	const [cart, setCart] = useState([]);
 	const [tempOrderId, setTempOrderId] = useState(true);
 	const { typeofuser } = useSelector(selectUser);
@@ -40,7 +40,6 @@ function ProductsView({ id }) {
 					config
 				)
 				.then((res) => {
-					console.log(res.data);
 					setTempOrderId(!tempOrderId);
 				});
 		} else {
@@ -55,7 +54,6 @@ function ProductsView({ id }) {
 				userId: user._id,
 			})
 			.then((res) => {
-				console.log(res.data);
 				setTempOrderId(!tempOrderId);
 			});
 	};
@@ -68,9 +66,8 @@ function ProductsView({ id }) {
 				},
 			})
 			.then((res) => {
-				//setOrderid(res.data.ids);
+				setOrderid(res.data.ids);
 				setTempOrderId(!tempOrderId);
-				console.log(res.data.ids);
 			});
 	};
 	useEffect(() => {
@@ -109,7 +106,6 @@ function ProductsView({ id }) {
 				.then((res) => {
 					setOrderid(res.data.ids);
 					setCart(res.data.cart);
-					console.log(res.data.cart);
 				});
 		}
 
@@ -136,7 +132,6 @@ function ProductsView({ id }) {
 					})}
 				</div>
 				<div className="category-product">
-					<h5>Showing : {getCategory}</h5>
 					{localProducts.length === 0 && (
 						<div>
 							<h1>No Rroduct is added yet</h1>
@@ -155,37 +150,40 @@ function ProductsView({ id }) {
 										<p>Rs. {product.price}</p>
 									</div>
 
-									{typeofuser === 'customer' ||
-										(typeofuser === null && (
-											<div>
-												{orderId && !orderId.includes(product.id) ? (
+									{typeofuser === 'customer' || typeofuser === null ? (
+										<div>
+											{orderId && !orderId.includes(product.id) ? (
+												<button
+													onClick={(e) => addtoCart(e, product)}
+													className="addtocart">
+													Add to cart
+												</button>
+											) : (
+												<div className="incdec">
 													<button
-														onClick={(e) => addtoCart(e, product)}
-														className="addtocart">
-														Add to cart
+														className="incdec-btn dec"
+														onClick={(e) => decOrder(e, product)}>
+														-
 													</button>
-												) : (
-													<div className="incdec">
-														<button
-															className="incdec-btn dec"
-															onClick={(e) => decOrder(e, product)}>
-															-
-														</button>
-														<button
-															className="incdec-btn inc"
-															onClick={(e) => incOrder(e, product)}>
-															+
-														</button>
-													</div>
-												)}
-											</div>
-										))}
+													<button
+														className="incdec-btn inc"
+														onClick={(e) => incOrder(e, product)}>
+														+
+													</button>
+												</div>
+											)}
+										</div>
+									) : (
+										<div></div>
+									)}
 								</div>
 							);
 						}
 					})}
 				</div>
-				<Cart cart={cart} />
+				{typeofuser === 'customer' && (
+					<Cart cart={cart} tempOrderId={tempOrderId} setTempOrderId={setTempOrderId} />
+				)}
 			</div>
 		</div>
 	);

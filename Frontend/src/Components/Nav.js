@@ -39,6 +39,7 @@ function Nav() {
 			{buttonText}
 		</button>
 	);
+
 	const logout = (e) => {
 		dispatch(logoutUser());
 		history.push('/');
@@ -49,7 +50,7 @@ function Nav() {
 			<div className="nav__content">
 				<div className="nav__name">
 					<Link className="dunzo" to="/">
-						<h2>Dunzo</h2>
+						<h2>DunzoX</h2>
 					</Link>
 				</div>
 

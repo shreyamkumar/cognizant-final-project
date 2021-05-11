@@ -4,7 +4,6 @@ const bcrpyt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'my-cts-final-internship-project-secret';
 const multer = require('multer');
-//const upload = multer({ dest: './uploads/serviceImg' });
 const mongoose = require('mongoose');
 
 const storage = multer.diskStorage({
@@ -65,7 +64,6 @@ router.post('/', upload.single('storeImage'), (req, res, next) => {
 								});
 							}
 						);
-						//console.log(result);
 					});
 				});
 			});
@@ -75,25 +73,6 @@ router.post('/', upload.single('storeImage'), (req, res, next) => {
 			});
 		}
 	});
-	//console.log(req.file);
 });
 
-// router.get('/', (req, res, next) => {
-// 	//console.log('hello');
-// 	Service.find().then((docs) => {
-// 		const response = {
-// 			count: docs.length,
-// 			services: docs.map((doc) => {
-// 				return {
-// 					id: doc._id,
-// 					title: doc.serviceTitle,
-// 					serviceImgUrl: doc.serviceImage,
-// 					desc: doc.serviceDesc,
-// 				};
-// 			}),
-// 		};
-
-// 		res.status(201).json(response);
-// 	});
-// });
 module.exports = router;

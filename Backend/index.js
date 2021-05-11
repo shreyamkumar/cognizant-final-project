@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
+require('dotenv/config');
 require('./db');
 app.use(cors());
 //Moddlewares
@@ -14,6 +15,7 @@ app.get('/', function (req, res) {
 
 	res.send('Welcome to Web application development by Express');
 });
+const PORT = process.env.PORT || 9000;
 
 const add_services = require('./Routes/add_services');
 const add_location = require('./Routes/add_location');
@@ -40,6 +42,6 @@ app.get('**', (req, res) => {
 	res.send('You dont have access to this route');
 });
 
-app.listen(9000, () => {
-	console.log('web application running on 9000');
+app.listen(PORT, () => {
+	console.log(`Web application running on ${PORT}`);
 });

@@ -19,6 +19,7 @@ const UserSignin = (props) => {
 	});
 	const [disable, setDisable] = useState(true);
 	const [error, setError] = useState({});
+	const [message, setMessage] = useState('');
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const handleSubmit = (e) => {
@@ -29,23 +30,17 @@ const UserSignin = (props) => {
 				password: formData.password.value,
 			})
 			.then((res) => {
-				console.log(res.data);
 				if (res.data.status === 'success') {
+					setMessage('');
 					localStorage.setItem('token', res.data.token);
 					dispatch(setUser(res.data.user));
-					if (res.data.typeofuser === 'serviceprovider') {
-						history.push(`store/${res.data.user.location}/${res.data.user._id}`);
-					} else {
-						history.push('/');
-					}
+
+					history.push('/');
+				} else {
+					setMessage(res.data.message);
 				}
 			})
-			.catch((err) => {
-				//handleReset(e);
-				console.log(err.response);
-				// if (err.response.status === 401) {
-				// }
-			});
+			.catch((err) => {});
 	};
 
 	const validate = (e) => {
@@ -55,7 +50,6 @@ const UserSignin = (props) => {
 			if (index === -1) {
 				err = `Invalid Email`;
 			}
-			//return err === '' ? 1 : 0;
 		} else if (e.target.value.length < 8) {
 			err = 'Password must be 8 characters long';
 		}
@@ -99,7 +93,6 @@ const UserSignin = (props) => {
 				})
 				.catch((err) => {
 					if (err.response.status === 401) {
-						//console.log(err.response)
 					}
 				});
 		}
@@ -124,9 +117,6 @@ const UserSignin = (props) => {
 			<h1 className="user-signin-heading">Welcome Back!!!</h1>
 			<form className="user-form" onSubmit={handleSubmit}>
 				<div className="form-group">
-					{/* <label className="user-label" htmlFor="email">
-						Email:
-					</label> */}
 					<input
 						type="text"
 						className="form-control user-signin-input"
@@ -138,9 +128,6 @@ const UserSignin = (props) => {
 					{error.email && <p className="error">{error.email}</p>}
 				</div>
 				<div className="form-group">
-					{/* <label className="user-label" htmlFor="password">
-						Password:
-					</label> */}
 					<input
 						type="password"
 						className="form-control user-signin-input"
@@ -151,7 +138,7 @@ const UserSignin = (props) => {
 					/>
 					{error.password && <p className="error">{error.password}</p>}
 				</div>
-
+				{message && <p className="error text-center">{message}</p>}
 				<div className="text-center">
 					<button
 						type="submit"

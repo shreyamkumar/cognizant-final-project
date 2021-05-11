@@ -55,7 +55,6 @@ const ServicesToLocation = (props) => {
 				})
 				.then((res) => {
 					setError((error) => ({ ...error, response: res.data.error }));
-					console.log(res.data);
 					if (!res.data.error) {
 						setError((error) => ({ ...error, success: res.data.message }));
 						setTimeout(function () {
@@ -82,7 +81,6 @@ const ServicesToLocation = (props) => {
 		axios.get('/add_location').then((response) => {
 			let count = response.data.count;
 			setGetLocations(response.data.locations.sort(compare));
-			//console.log(response.data.locations);
 		});
 
 		axios.get('/add_services').then((response) => {
@@ -93,7 +91,6 @@ const ServicesToLocation = (props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log(error);
 		if (Object.keys(error).length >= 2) {
 			if (error.locations === '' && error.services === '') {
 				setDisable(false);

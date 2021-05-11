@@ -15,7 +15,6 @@ router.post('/', (req, res) => {
 				country: req.body.country,
 			});
 			location.save().then((result) => {
-				//console.log(result);
 				res.status(201).json({
 					message: 'created successfully',
 					createdService: result,

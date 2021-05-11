@@ -126,7 +126,6 @@ function AddProducts(props) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log(formData);
 
 		const postData = new FormData();
 		postData.append('id', user._id);
@@ -139,21 +138,19 @@ function AddProducts(props) {
 		await axios.post('/add_products', postData).then((res) => {
 			setError((error) => ({ ...error, productExist: res.data.error }));
 			setError((error) => ({ ...error, success: res.data.message }));
-			console.log(res.data);
-			// if (!res.data.error) {
-			// 	setTimeout(function () {
-			// 		closeModal();
-			// 	}, 1000);
-			// }
-			// setTimeout(function () {
-			// 	setError({});
-			// }, 1000);
-			// handleReset(e);
+			if (!res.data.error) {
+				setTimeout(function () {
+					closeModal();
+				}, 1000);
+			}
+			setTimeout(function () {
+				setError({});
+			}, 1000);
+			handleReset(e);
 		});
 	};
 
 	useEffect(() => {
-		console.log(error);
 		if (Object.keys(error).length >= 5) {
 			if (
 				error.productDesc === '' &&
@@ -169,9 +166,6 @@ function AddProducts(props) {
 		} else {
 			setDisable(true);
 		}
-		// return () => {
-		// 	cleanup;
-		// };
 	}, [error]);
 	return (
 		<div className="addproducts">

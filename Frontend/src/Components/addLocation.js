@@ -89,7 +89,6 @@ let AddLocation = (props) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log(error);
 		await axios
 			.post('/add_location', {
 				location: formData.locationName.value,
@@ -121,7 +120,6 @@ let AddLocation = (props) => {
 				error.country === ''
 			) {
 				setDisable(false);
-				console.log(disable);
 			} else {
 				setDisable(true);
 			}

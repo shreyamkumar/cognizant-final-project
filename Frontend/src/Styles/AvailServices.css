@@ -1,7 +1,13 @@
 .availServices {
+	/* width: 80%; */
+	margin: 0 auto;
+	/* padding: 10px 50px; */
+}
+.location,
+.service_cards,
+.availServices-heading {
 	width: 80%;
 	margin: 0 auto;
-	padding: 10px 50px;
 }
 
 label {
@@ -17,14 +23,14 @@ select {
 }
 
 .service_cards {
-	margin: 50px 0;
+	margin: 50px auto 0 auto;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 .service_link {
 	margin-right: 30px;
-	flex: 0 0 24%;
+	flex: 0 0 20%;
 }
 
 .custom_card {

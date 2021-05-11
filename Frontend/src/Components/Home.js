@@ -30,11 +30,7 @@ function Home() {
 				.then((res) => {
 					dispatch(setUser(res.data.user));
 				})
-				.catch((err) => {
-					console.log(err.response);
-					// if (err.response.status === 401) {
-					// }
-				});
+				.catch((err) => {});
 		}
 		return () => {
 			source.cancel();
@@ -59,10 +55,6 @@ function Home() {
 				<Route path={`/registerstore`}>
 					<RegisterServiceProvider />
 				</Route>
-
-				{/* <Route path={`/storesignin`}>
-					<Signin />
-				</Route> */}
 				<Route path={`/signup`}>
 					<UserSignup />
 				</Route>

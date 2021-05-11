@@ -40,11 +40,7 @@ router.post('/', upload.single('serviceImage'), (req, res, next) => {
 			});
 
 			service.save().then((result) => {
-				//console.log(result);
-				req.session.ServiceId = result._id;
-
-				console.log(req.session.ServiceId);
-				res.status(201).json({
+				return res.status(201).json({
 					message: 'created successfully',
 					createdService: result,
 				});
@@ -55,7 +51,6 @@ router.post('/', upload.single('serviceImage'), (req, res, next) => {
 			});
 		}
 	});
-	//console.log(req.file);
 });
 
 router.get('/checkSignin', (req, res) => {
@@ -83,8 +78,6 @@ router.get('/checkSignout', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-	//console.log('hello');
-	//console.log(req.session);
 	Service.find().then((docs) => {
 		const response = {
 			count: docs.length,

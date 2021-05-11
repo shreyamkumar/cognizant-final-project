@@ -18,18 +18,6 @@ const unCommonServices = (first, second) => {
 };
 
 router.post('/', (req, res) => {
-	// let mapservice = new MapServices({
-	// 	_id: new mongoose.Types.ObjectId(),
-	// 	serviceLocation: req.body.location,
-	// 	availServices: req.body.mapservice,
-	// });
-	// mapservice.save().then((result) => {
-	// 	//console.log(result);
-	// 	res.status(201).json({
-	// 		message: 'created successfully',
-	// 		createdService: result,
-	// 	});
-	// });
 	const reqLocation = req.body.location;
 	MapServices.find({ serviceLocation: reqLocation }).then((doc) => {
 		let error = '';
@@ -50,15 +38,12 @@ router.post('/', (req, res) => {
 				availServices: req.body.mapservice,
 				availServicesId: req.body.mapserviceId,
 			});
-			mapservice.save().then((result) => {
-				//console.log(result);
-			});
+			mapservice.save().then((result) => {});
 		}
 
 		res.status(201).json({
 			message: 'created successfully',
 			error: error,
-			// createdService: result,
 		});
 	});
 });

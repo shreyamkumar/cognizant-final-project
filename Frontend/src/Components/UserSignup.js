@@ -42,6 +42,7 @@ const UserSignup = (props) => {
 	});
 	const [disable, setDisable] = useState(true);
 	const [error, setError] = useState({});
+	const [message, setMessage] = useState('');
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const validateFormData = (e) => {
@@ -63,8 +64,6 @@ const UserSignup = (props) => {
 		} else if (e.target.name === 'passwordConfirm') {
 			let err = '';
 			if (e.target.value !== formData.password.value) {
-				console.log(formData.password.value);
-				console.log(e.target.value);
 				err = 'Password did not match';
 			} else {
 				err = '';
@@ -115,9 +114,13 @@ const UserSignup = (props) => {
 			.then((res) => {
 				stopSpinner();
 				if (res.data.status === 'success') {
+					setMessage('');
 					history.push('/');
 					localStorage.setItem('token', res.data.token);
 					dispatch(setUser(res.data.user));
+				} else if (res.data.status === 'fail') {
+					setMessage(res.data.message);
+					handleReset(e);
 				}
 			})
 			.catch((err) => {
@@ -158,9 +161,6 @@ const UserSignup = (props) => {
 			</h1>
 			<form className="user-signup-form" onSubmit={handleSubmit}>
 				<div className="form-group user-signup-input-group">
-					{/* <label className="user-label" htmlFor="name">
-						Name:
-					</label> */}
 					<input
 						type="text"
 						className="form-control user-signup-input"
@@ -172,9 +172,6 @@ const UserSignup = (props) => {
 					{error.name && <p className="error">{error.name}</p>}
 				</div>
 				<div className="form-group user-signup-input-group">
-					{/* <label className="user-label" htmlFor="email">
-						Email:
-					</label> */}
 					<input
 						type="text"
 						className="form-control user-signup-input"
@@ -186,9 +183,6 @@ const UserSignup = (props) => {
 					{error.email && <p className="error">{error.email}</p>}
 				</div>
 				<div className="form-group user-signup-input-group">
-					{/* <label className="user-label" htmlFor="password">
-						Password:
-					</label> */}
 					<input
 						type="password"
 						className="form-control user-signup-input"
@@ -200,9 +194,6 @@ const UserSignup = (props) => {
 					{error.password && <p className="error">{error.password}</p>}
 				</div>
 				<div className="form-group user-signup-input-group">
-					{/* <label className="user-label" htmlFor="passwordConfirm">
-						Confirm Password:
-					</label> */}
 					<input
 						type="password"
 						className="form-control user-signup-input"
@@ -214,9 +205,6 @@ const UserSignup = (props) => {
 					{error.passwordConfirm && <p className="error">{error.passwordConfirm}</p>}
 				</div>
 				<div className="form-group user-signup-input-group">
-					{/* <label className="user-label" htmlFor="mobile">
-						Mobile:
-					</label> */}
 					<input
 						type="number"
 						className="form-control user-signup-input"
@@ -228,10 +216,6 @@ const UserSignup = (props) => {
 					{error.mobile && <p className="error">{error.mobile}</p>}
 				</div>
 				<div className="form-group user-signup-input-group">
-					{/* <label className="user-label" htmlFor="address">
-						Address:
-					</label> */}
-
 					<textarea
 						className="form-control user-signup-input"
 						name="address"
@@ -244,7 +228,7 @@ const UserSignup = (props) => {
 
 					{error.address && <p className="error">{error.address}</p>}
 				</div>
-
+				{message && <p className="error text-center">{message}</p>}
 				<div className="text-center">
 					<button
 						type="submit"

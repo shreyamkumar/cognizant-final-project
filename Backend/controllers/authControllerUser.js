@@ -20,6 +20,7 @@ exports.signup = async (req, res) => {
 			});
 		}
 	});
+	let userType = req.body.name === 'admin' ? 'admin' : 'customer';
 	try {
 		const newUser = User({
 			name: req.body.name,
@@ -27,19 +28,11 @@ exports.signup = async (req, res) => {
 			email: req.body.email,
 			mobile: req.body.mobile,
 			address: req.body.address,
-			typeofuser: 'customer',
+			typeofuser: userType,
 		});
 		const savedUser = await newUser.save();
 		const token = signToken(newUser._id);
-		//const savedUser = await User.find({ email: newUser.email });
 
-		// res.status(201).json({
-		//     status : 'Success',
-		//     token,
-		//     data: {
-		//         user: newUser
-		//     }
-		// });
 		try {
 			await sendEmail({
 				email: req.body.email,
@@ -70,11 +63,13 @@ exports.login = async (req, res, next) => {
 	try {
 		const { email, password } = req.body;
 		const store = await Store.findOne({ email });
+		const newUser = await User.findOne({ email }).select('+password');
 		if (store !== null) {
 			let user = store;
 			const isMatch = await bcrypt.compare(password, store.password);
 			if (!isMatch) {
-				return res.status(401).json({
+				return res.json({
+					status: 'fail',
 					message: 'Email or Password is incorrect',
 				});
 			}
@@ -85,12 +80,12 @@ exports.login = async (req, res, next) => {
 				user,
 				typeofuser: 'serviceprovider',
 			});
-		} else {
-			const newUser = await User.findOne({ email }).select('+password');
+		} else if (newUser !== null) {
 			const user = await User.findOne({ email }).select('-password');
 
 			if (!newUser || !(await newUser.correctPassword(password, newUser.password))) {
-				return res.status(401).json({
+				return res.json({
+					status: 'fail',
 					message: 'Email or Password is incorrect',
 				});
 			}
@@ -101,6 +96,11 @@ exports.login = async (req, res, next) => {
 				token,
 				user,
 				typeofuser: 'customer',
+			});
+		} else {
+			return res.json({
+				status: 'fail',
+				message: 'User does not exist',
 			});
 		}
 	} catch (err) {
